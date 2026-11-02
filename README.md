@@ -22,7 +22,7 @@ pixi run bridge
 # options:
 pixi run bridge --help
 pixi run bridge --address localhost:8090
-pixi run bridge --hz 5          # telemetry update rate (default: 5 Hz)
+pixi run bridge --hz 5
 ```
 
 By default, the bridge connects to the router at `tcp/localhost:7447` (see `zenoh.json5`) and YAMCS at `localhost:8090`, instance `ssf-tohoku`, processor `realtime`.
