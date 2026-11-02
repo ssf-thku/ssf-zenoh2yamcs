@@ -1,0 +1,22 @@
+[workspace]
+authors = ["Elian <elian.neppel@posteo.eu>"]
+channels = ["conda-forge"]
+name = "ssf-zenoh2yamcs"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+bridge = "python -m ssf_zenoh2yamcs"
+test = "pytest -q"
+check = "ruff check ."
+
+[dependencies]
+python = "3.12.*"
+pytest = ">=8"
+ruff = ">=0.9"
+
+[pypi-dependencies]
+ssf-zenoh2yamcs = { path = ".", editable = true }
+
+[activation.env]
+ZENOH_SESSION_CONFIG_URI = "zenoh.json5"

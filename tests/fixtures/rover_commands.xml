@@ -1,0 +1,357 @@
+<?xml version='1.0' encoding='utf-8'?>
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" name="Rover">
+  <SpaceSystem name="cdh" shortDescription="Command and data handling">
+    <CommandMetaData>
+      <ArgumentTypeSet>
+        <EnumeratedArgumentType name="deploy_legs__deployment">
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+          <EnumerationList>
+            <Enumeration value="0" label="PACK" />
+            <Enumeration value="1" label="UNPACK" />
+          </EnumerationList>
+        </EnumeratedArgumentType>
+        <EnumeratedArgumentType name="deploy_manipulator__deployment">
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+          <EnumerationList>
+            <Enumeration value="0" label="STOW" />
+            <Enumeration value="1" label="DEPLOY" />
+          </EnumerationList>
+        </EnumeratedArgumentType>
+        <EnumeratedArgumentType name="deploy_solar_panel__deployment">
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+          <EnumerationList>
+            <Enumeration value="0" label="STOW" />
+            <Enumeration value="1" label="DEPLOY" />
+          </EnumerationList>
+        </EnumeratedArgumentType>
+      </ArgumentTypeSet>
+      <MetaCommandSet>
+        <MetaCommand name="approach_rock" abstract="false" shortDescription="Move the manipulator above the latest detected rock">
+          <CommandContainer name="approach_rock">
+            <EntryList>
+              <FixedValueEntry binaryValue="617070726f6163685f726f636b" sizeInBits="104" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="cancel_motion" abstract="false" shortDescription="Cancel all active rover motion">
+          <CommandContainer name="cancel_motion">
+            <EntryList>
+              <FixedValueEntry binaryValue="63616e63656c5f6d6f74696f6e" sizeInBits="104" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="close_gripper" abstract="false" shortDescription="Close both manipulator gripper jaws">
+          <CommandContainer name="close_gripper">
+            <EntryList>
+              <FixedValueEntry binaryValue="636c6f73655f67726970706572" sizeInBits="104" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="deploy_legs" abstract="false" shortDescription="Deploy the legs">
+          <ArgumentList>
+            <Argument name="deployment" argumentTypeRef="deploy_legs__deployment" shortDescription="Deployment action" />
+          </ArgumentList>
+          <CommandContainer name="deploy_legs">
+            <EntryList>
+              <FixedValueEntry binaryValue="6465706c6f795f6c656773" sizeInBits="88" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="deployment" shortDescription="Deployment action argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="deploy_manipulator" abstract="false" shortDescription="Deploy the manipulator">
+          <ArgumentList>
+            <Argument name="deployment" argumentTypeRef="deploy_manipulator__deployment" shortDescription="Deployment action" />
+          </ArgumentList>
+          <CommandContainer name="deploy_manipulator">
+            <EntryList>
+              <FixedValueEntry binaryValue="6465706c6f795f6d616e6970756c61746f72" sizeInBits="144" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="deployment" shortDescription="Deployment action argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="deploy_solar_panel" abstract="false" shortDescription="Deploy the solar panel">
+          <ArgumentList>
+            <Argument name="deployment" argumentTypeRef="deploy_solar_panel__deployment" shortDescription="Deployment action" />
+          </ArgumentList>
+          <CommandContainer name="deploy_solar_panel">
+            <EntryList>
+              <FixedValueEntry binaryValue="6465706c6f795f736f6c61725f70616e656c" sizeInBits="144" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="deployment" shortDescription="Deployment action argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="grasp_rock" abstract="false" shortDescription="Move the manipulator to the latest detected rock grasp pose">
+          <CommandContainer name="grasp_rock">
+            <EntryList>
+              <FixedValueEntry binaryValue="67726173705f726f636b" sizeInBits="80" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="lift_rock" abstract="false" shortDescription="Lift the manipulator above the latest detected rock">
+          <CommandContainer name="lift_rock">
+            <EntryList>
+              <FixedValueEntry binaryValue="6c6966745f726f636b" sizeInBits="72" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="open_gripper" abstract="false" shortDescription="Open both manipulator gripper jaws">
+          <CommandContainer name="open_gripper">
+            <EntryList>
+              <FixedValueEntry binaryValue="6f70656e5f67726970706572" sizeInBits="96" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="store_rock" abstract="false" shortDescription="Move the grasped rock into the sample box">
+          <CommandContainer name="store_rock">
+            <EntryList>
+              <FixedValueEntry binaryValue="73746f72655f726f636b" sizeInBits="80" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+      </MetaCommandSet>
+    </CommandMetaData>
+  </SpaceSystem>
+  <SpaceSystem name="motor" shortDescription="Motor and drive TMTC">
+    <CommandMetaData>
+      <ArgumentTypeSet>
+        <FloatArgumentType name="drive_straight__linear_velocity" sizeInBits="32">
+          <UnitSet>
+            <Unit form="calibrated">m/s</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="drive_straight__distance" sizeInBits="32">
+          <UnitSet>
+            <Unit form="calibrated">m</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+          <ValidRangeSet validRangeAppliesToCalibrated="true">
+            <ValidRange minInclusive="0.0" />
+          </ValidRangeSet>
+        </FloatArgumentType>
+        <FloatArgumentType name="drive_turn__angular_velocity" sizeInBits="32">
+          <UnitSet>
+            <Unit form="calibrated">deg/s</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="drive_turn__angle" sizeInBits="32">
+          <UnitSet>
+            <Unit form="calibrated">deg</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+          <ValidRangeSet validRangeAppliesToCalibrated="true">
+            <ValidRange minInclusive="0.0" />
+          </ValidRangeSet>
+        </FloatArgumentType>
+      </ArgumentTypeSet>
+      <MetaCommandSet>
+        <MetaCommand name="drive_straight" abstract="false" shortDescription="Drive the rover straight">
+          <ArgumentList>
+            <Argument name="linear_velocity" argumentTypeRef="drive_straight__linear_velocity" shortDescription="Linear velocity" />
+            <Argument name="distance" argumentTypeRef="drive_straight__distance" shortDescription="Distance to travel" />
+          </ArgumentList>
+          <CommandContainer name="drive_straight">
+            <EntryList>
+              <FixedValueEntry binaryValue="64726976655f7374726169676874" sizeInBits="112" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="linear_velocity" shortDescription="Linear velocity argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="distance" shortDescription="Distance argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="drive_turn" abstract="false" shortDescription="Drive the rover with spot turn">
+          <ArgumentList>
+            <Argument name="angular_velocity" argumentTypeRef="drive_turn__angular_velocity" shortDescription="Angular velocity" />
+            <Argument name="angle" argumentTypeRef="drive_turn__angle" shortDescription="Angle to turn" />
+          </ArgumentList>
+          <CommandContainer name="drive_turn">
+            <EntryList>
+              <FixedValueEntry binaryValue="64726976655f7475726e" sizeInBits="80" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="angular_velocity" shortDescription="Angular velocity argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="angle" shortDescription="Angle argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+      </MetaCommandSet>
+    </CommandMetaData>
+  </SpaceSystem>
+  <SpaceSystem name="camera" shortDescription="Camera control TMTC">
+    <CommandMetaData>
+      <ArgumentTypeSet>
+        <StringArgumentType name="camera_capture_group__camera_names" initialValue="gripper,mast_vert,mast_horiz,haz_front,haz_back,belly,nav_left,nav_right,sim_front,sim_back,sim_ortho_top">
+          <StringDataEncoding encoding="US-ASCII">
+            <Variable maxSizeInBits="8388608">
+              <DynamicValue>
+                <ParameterInstanceRef parameterRef="_yamcs_ignore" />
+              </DynamicValue>
+              <TerminationChar>00</TerminationChar>
+            </Variable>
+          </StringDataEncoding>
+          <SizeRangeInCharacters minInclusive="1" maxInclusive="1024" />
+        </StringArgumentType>
+        <EnumeratedArgumentType name="camera_capture_high__camera_name">
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+          <EnumerationList>
+            <Enumeration value="0" label="gripper" />
+            <Enumeration value="1" label="mast_vert" />
+            <Enumeration value="2" label="mast_horiz" />
+            <Enumeration value="3" label="haz_front" />
+            <Enumeration value="4" label="haz_back" />
+            <Enumeration value="5" label="belly" />
+            <Enumeration value="6" label="nav_left" />
+            <Enumeration value="7" label="nav_right" />
+            <Enumeration value="8" label="sim_front" />
+            <Enumeration value="9" label="sim_back" />
+            <Enumeration value="10" label="sim_ortho_top" />
+          </EnumerationList>
+        </EnumeratedArgumentType>
+      </ArgumentTypeSet>
+      <MetaCommandSet>
+        <MetaCommand name="camera_capture_group" abstract="false" shortDescription="Capture several scene cameras together">
+          <ArgumentList>
+            <Argument name="camera_names" argumentTypeRef="camera_capture_group__camera_names" shortDescription="Comma-separated camera short names">
+              <LongDescription>For example: l_LeftCam,l_RightCam. All selected cameras render together.</LongDescription>
+            </Argument>
+          </ArgumentList>
+          <CommandContainer name="camera_capture_group">
+            <EntryList>
+              <FixedValueEntry binaryValue="63616d6572615f636170747572655f67726f7570" sizeInBits="160" name="command_name">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="camera_names">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="camera_capture_high" abstract="false" shortDescription="Capture one scene camera">
+          <ArgumentList>
+            <Argument name="camera_name" argumentTypeRef="camera_capture_high__camera_name" shortDescription="Scene camera short name" />
+          </ArgumentList>
+          <CommandContainer name="camera_capture_high">
+            <EntryList>
+              <FixedValueEntry binaryValue="63616d6572615f636170747572655f68696768" sizeInBits="152" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="camera_name" shortDescription="Camera name argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+      </MetaCommandSet>
+    </CommandMetaData>
+  </SpaceSystem>
+</SpaceSystem>

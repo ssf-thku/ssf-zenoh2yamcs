@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssf-zenoh2yamcs"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["asyncio-for-robotics[zenoh]>=1.5.1", "yamcs-client>=1.9", "msgspec>=0.19", "pillow>=11"]
+
+[tool.setuptools.packages.find]
+include = ["ssf_zenoh2yamcs*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
