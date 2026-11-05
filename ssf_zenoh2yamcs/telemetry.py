@@ -81,4 +81,29 @@ def joint_parameters(payload: bytes) -> dict[str, Value]:
     for state in frame.states:
         if any(value is not None and not math.isfinite(value) for value in (state.position, state.velocity, state.effort)):
             raise ValueError(f"Non-finite joint state for {state.name}")
-    return {"/Rover/motor/joint_telemetry": msgspec.json.encode(msgspec.to_builtins(frame)).decode()}
+    values = {"/Rover/motor/joint_telemetry": msgspec.json.encode(msgspec.to_builtins(frame)).decode()}
+    positions = {state.name: state.position for state in frame.states}
+    arm = [positions.get(f"ajoint_{i}") for i in range(6)]
+    if all(position is not None for position in arm):
+        values["/Rover/motor/arm_joint_positions"] = [math.degrees(position) for position in arm]
+    return values
+
+
+class CommandStatus(msgspec.Struct):
+    request_id: str | int
+    command: str
+    status: str
+    error: str | None = None
+
+
+_COMMAND_STATUS = msgspec.json.Decoder(CommandStatus)
+
+
+def command_status_parameters(payload: bytes) -> dict[str, Value]:
+    """Keep motion feedback IDs and errors for YAMCS telemetry and its archive."""
+    status = _COMMAND_STATUS.decode(payload)
+    if status.status not in {"STARTED", "COMPLETED", "FAILED", "CANCELLED"}:
+        raise ValueError(f"Unknown command status {status.status!r}")
+    return {
+        "/Rover/motor/command_status": msgspec.json.encode(status).decode(),
+    }

@@ -69,3 +69,7 @@ Scheduling and Zenoh integration use asyncio and `asyncio_for_robotics`. Forward
 - `yamcs.py` -- afor interfaces for parameter publishing, image uploads and receiving UDP commands.
 
 Publishing and uploads are synchronous. Waiting for commands and Zenoh samples is async.
+
+## Image storage errors
+
+A failed camera upload is logged and displayed in red in the UI. The message gives the bucket path, quota, and a plain delete-or-move command. The bridge keeps running.

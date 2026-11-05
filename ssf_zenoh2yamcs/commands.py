@@ -28,6 +28,8 @@ ROUTES = {
     "/Rover/camera/camera_capture_group": CAMERA_REQUEST_KEY,
     "/Rover/motor/drive_straight": "drive_straight",
     "/Rover/motor/drive_turn": "drive_turn",
+    "/Rover/motor/set_arm_joint": "set_arm_joint",
+    "/Rover/motor/set_arm_tip": "set_arm_tip",
     "/Rover/cdh/deploy_solar_panel": "solar_panel",
     "/Rover/cdh/deploy_manipulator": "manipulator",
     "/Rover/cdh/deploy_legs": "legs",
@@ -200,6 +202,23 @@ def translate(
                 if not names or any(not name or "/" in name for name in names):
                     raise ValueError("Select camera short names")
                 return topic, list(dict.fromkeys(names))
+            if topic == "set_arm_joint":
+                values = {
+                    "joint_name": values["joint_name"],
+                    "position_rad": math.radians(values["position_deg"]),
+                }
+            if topic == "set_arm_tip":
+                values = {
+                    "frame_id": (
+                        "l_Gripper_Base" if values["frame_id"] == "End-Effector"
+                        else values["frame_id"]
+                    ),
+                    "position_m": [values[key] for key in ("x_m", "y_m", "z_m")],
+                    "orientation_rpy_rad": [
+                        math.radians(values[key])
+                        for key in ("roll_deg", "pitch_deg", "yaw_deg")
+                    ],
+                }
             if topic == "drive_turn":
                 # YAMCS arguments are deg and deg/s; the motion stack uses radians.
                 values = {key: math.radians(value) for key, value in values.items()}

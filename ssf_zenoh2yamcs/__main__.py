@@ -1,10 +1,19 @@
 import argparse
 import asyncio
 import logging
+import sys
 from contextlib import suppress
 from pathlib import Path
 
 from .bridge import Config, run
+
+
+class ErrorFormatter(logging.Formatter):
+    def format(self, record: logging.LogRecord) -> str:
+        message = super().format(record)
+        if record.levelno >= logging.ERROR and sys.stderr.isatty():
+            return f"\033[31m{message}\033[0m"
+        return message
 
 
 def main() -> None:
@@ -22,6 +31,7 @@ def main() -> None:
     parser.add_argument("--no-encoders", action="store_true")
     parser.add_argument("--no-commands", action="store_true")
     parser.add_argument("--no-cameras", action="store_true")
+    parser.add_argument("--no-command-feedback", action="store_true")
     parser.add_argument("--public-url", help="Public YAMCS URL used in image links")
     parser.add_argument("--command-host", default=defaults.command_host)
     parser.add_argument("--command-port", type=int, default=defaults.command_port)
@@ -38,14 +48,15 @@ def main() -> None:
         encoders=not args.no_encoders,
         commands=not args.no_commands,
         cameras=not args.no_cameras,
+        command_feedback=not args.no_command_feedback,
         public_url=args.public_url,
         command_host=args.command_host,
         command_port=args.command_port,
         mdb=args.mdb,
     )
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
-    )
+    handler = logging.StreamHandler()
+    handler.setFormatter(ErrorFormatter("%(asctime)s %(levelname)s %(message)s"))
+    logging.basicConfig(level=logging.INFO, handlers=[handler])
     with suppress(KeyboardInterrupt):
         asyncio.run(run(config))
 

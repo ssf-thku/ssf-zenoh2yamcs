@@ -160,7 +160,7 @@ def test_run_stays_alive_forwards_both_topics_and_cleans_up(
         with zenoh.open(config) as session:
             monkeypatch.setattr(bridge, "auto_context", lambda: auto_context(session))
             task = asyncio.create_task(
-                bridge.run(bridge.Config(hz=100, commands=False))
+                bridge.run(bridge.Config(hz=100, commands=False, command_feedback=False))
             )
             try:
                 async with asyncio.timeout(3):

@@ -7,6 +7,7 @@ import asyncio_for_robotics as afor
 import msgspec
 from asyncio_for_robotics.zenoh import Sub
 from PIL import Image
+from yamcs.client.core.exceptions import YamcsError
 
 from .yamcs import ParameterPublisher
 
@@ -50,7 +51,16 @@ async def forward_camera_images(publisher: ParameterPublisher) -> None:
         except (msgspec.DecodeError, ValueError) as exc:
             logger.warning("Rejected image from %s: %s", camera_name, exc)
             continue
-        publisher.publish_image(camera_name, png)
+        try:
+            publisher.publish_image(camera_name, png)
+        except (YamcsError, OSError) as exc:
+            message = publisher.image_error(exc)
+            logger.error("%s", message)
+            try:
+                publisher.publish({"/Rover/camera/images_oncommand/error": message})
+            except (YamcsError, OSError):
+                pass
+            continue
         if camera_name not in published:
             logger.info("Forwarding camera %s to YAMCS", camera_name)
             published.add(camera_name)

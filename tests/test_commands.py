@@ -130,6 +130,7 @@ def test_command_only_application_udp_to_real_zenoh(
                         imu=False,
                         encoders=False,
                         cameras=False,
+                        command_feedback=False,
                         mdb=MDB,
                         base_keyexpr="test/rover",
                     )

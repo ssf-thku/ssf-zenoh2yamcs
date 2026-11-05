@@ -14,7 +14,7 @@ from asyncio_for_robotics.zenoh import Sub, auto_context
 
 from .cameras import forward_camera_images
 from .commands import DEFAULT_MDB, forward_commands
-from .telemetry import imu_parameters, joint_parameters
+from .telemetry import command_status_parameters, imu_parameters, joint_parameters
 from .yamcs import ParameterPublisher, Value
 
 logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ class Config:
     encoders: bool = True
     commands: bool = True
     cameras: bool = True
+    command_feedback: bool = True
     public_url: str | None = None
     command_host: str = "127.0.0.1"
     command_port: int = 10025
@@ -43,10 +44,11 @@ async def forward(
     topic: str,
     convert: Callable[[bytes], dict[str, Value]],
     publisher: ParameterPublisher,
-    hz: float,
+    hz: float | None,
 ) -> None:
     sub = Sub(topic)
-    samples = sub.listen()
+    # Command status is event data: preserve STARTED and terminal messages.
+    samples = sub.listen_reliable() if hz is None else sub.listen()
     logger.info("Subscribed to %s", topic)
     published = False
     try:
@@ -63,7 +65,8 @@ async def forward(
                         published = True
             # The subscriber retains only the latest message during this wait.
             # Avoid queuing 50 Hz feedback behind synchronous YAMCS requests.
-            await asyncio.sleep(1.0 / hz)
+            if hz is not None:
+                await asyncio.sleep(1.0 / hz)
     finally:
         await samples.aclose()
 
@@ -76,6 +79,7 @@ async def run(config: Config) -> None:
         and not config.encoders
         and not config.commands
         and not config.cameras
+        and not config.command_feedback
     ):
         raise ValueError("Enable at least one bridge direction")
     # The scope closes subscribers and cancels forwarding tasks before the
@@ -91,12 +95,21 @@ async def run(config: Config) -> None:
                         config.base_keyexpr,
                     )
                 )
-            if config.imu or config.encoders or config.cameras:
+            if config.imu or config.encoders or config.cameras or config.command_feedback:
                 publisher = ParameterPublisher(
                     config.address,
                     config.instance,
                     config.processor,
                     public_url=config.public_url,
+                )
+            if config.command_feedback:
+                scope.task_group.create_task(
+                    forward(
+                        f"{config.base_keyexpr}/command_status",
+                        command_status_parameters,
+                        publisher,
+                        None,
+                    )
                 )
             if config.cameras:
                 scope.task_group.create_task(forward_camera_images(publisher))

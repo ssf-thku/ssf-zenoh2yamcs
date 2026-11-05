@@ -10,6 +10,7 @@ from typing import TypeAlias
 
 import asyncio_for_robotics as afor
 from yamcs.client import YamcsClient
+from yamcs.client.core.exceptions import YamcsError
 from yamcs.client.tmtc.client import ProcessorClient
 
 Value: TypeAlias = bool | int | float | str | list["Value"] | dict[str, "Value"]
@@ -35,6 +36,7 @@ class ParameterPublisher:
         self._client = YamcsClient(address)
         self._address = address
         self._public_url = (public_url or f"http://{address}").rstrip("/")
+        self._image_error_message = "Image upload failed. Check Yamcs storage."
         self._image_count = 0
         self._camera_image_counts: dict[str, int] = {}
         self._processor: ProcessorClient = self._client.get_processor(
@@ -58,6 +60,19 @@ class ParameterPublisher:
             self._processor.set_parameter_values(
                 values, generation_time=generation_time
             )
+
+    def image_error(self, error: Exception) -> str:
+        try:
+            bucket = self._client.get_storage_client().get_bucket("images_oncommand")
+            full = bucket.size >= bucket.max_size * .9 or bucket.object_count >= bucket.max_object_count
+            status = "Image bucket full" if full else f"Image upload failed: {error}"
+            self._image_error_message = (
+                f'{status} at "{bucket.directory}" ({bucket.max_size / 1048576:g} MiB Yamcs limit). '
+                f'Delete its contents with `rm -r -- {bucket.directory}/*` or move them to continue.'
+            )
+        except (YamcsError, OSError):
+            pass
+        return self._image_error_message
 
     def publish_image(self, camera_name: str, png: bytes) -> None:
         """Store the snapshot and latest copy before publishing camera metadata."""
@@ -101,6 +116,7 @@ class ParameterPublisher:
                 for field, value in metadata.items()
             }
         )
+        values[f"{base}/error"] = ""
         self.publish(values)
         self._image_count += 1
         self._camera_image_counts[camera_name] = camera_count

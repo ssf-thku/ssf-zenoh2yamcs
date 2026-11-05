@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='utf-8'?>
 <SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" name="Rover">
   <SpaceSystem name="cdh" shortDescription="Command and data handling">
     <CommandMetaData>
@@ -216,6 +215,66 @@
             <ValidRange minInclusive="0.0" />
           </ValidRangeSet>
         </FloatArgumentType>
+        <EnumeratedArgumentType name="set_arm_joint__joint_name">
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+          <EnumerationList>
+            <Enumeration value="0" label="ajoint_0" />
+            <Enumeration value="1" label="ajoint_1" />
+            <Enumeration value="2" label="ajoint_2" />
+            <Enumeration value="3" label="ajoint_3" />
+            <Enumeration value="4" label="ajoint_4" />
+            <Enumeration value="5" label="ajoint_5" />
+          </EnumerationList>
+        </EnumeratedArgumentType>
+        <FloatArgumentType name="set_arm_joint__position_deg" sizeInBits="32">
+          <UnitSet>
+            <Unit form="calibrated">deg</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <EnumeratedArgumentType name="set_arm_tip__frame_id" initialValue="base_link">
+          <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+          <EnumerationList>
+            <Enumeration value="0" label="base_link" />
+            <Enumeration value="1" label="End-Effector" />
+          </EnumerationList>
+        </EnumeratedArgumentType>
+        <FloatArgumentType name="set_arm_tip__x_m" sizeInBits="32" initialValue="0.0">
+          <UnitSet>
+            <Unit form="calibrated">m</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="set_arm_tip__y_m" sizeInBits="32" initialValue="0.0">
+          <UnitSet>
+            <Unit form="calibrated">m</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="set_arm_tip__z_m" sizeInBits="32" initialValue="0.0">
+          <UnitSet>
+            <Unit form="calibrated">m</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="set_arm_tip__roll_deg" sizeInBits="32" initialValue="0.0">
+          <UnitSet>
+            <Unit form="calibrated">deg</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="set_arm_tip__pitch_deg" sizeInBits="32" initialValue="0.0">
+          <UnitSet>
+            <Unit form="calibrated">deg</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
+        <FloatArgumentType name="set_arm_tip__yaw_deg" sizeInBits="32" initialValue="0.0">
+          <UnitSet>
+            <Unit form="calibrated">deg</Unit>
+          </UnitSet>
+          <FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="mostSignificantByteFirst" />
+        </FloatArgumentType>
       </ArgumentTypeSet>
       <MetaCommandSet>
         <MetaCommand name="drive_straight" abstract="false" shortDescription="Drive the rover straight">
@@ -263,6 +322,91 @@
                 </LocationInContainerInBits>
               </ArgumentRefEntry>
               <ArgumentRefEntry argumentRef="angle" shortDescription="Angle argument">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="set_arm_joint" abstract="false" shortDescription="Move one arm joint to an absolute angle in degrees">
+          <ArgumentList>
+            <Argument name="joint_name" argumentTypeRef="set_arm_joint__joint_name" shortDescription="Arm joint to move" />
+            <Argument name="position_deg" argumentTypeRef="set_arm_joint__position_deg" shortDescription="Absolute joint angle; current URDF limits apply" />
+          </ArgumentList>
+          <CommandContainer name="set_arm_joint">
+            <EntryList>
+              <FixedValueEntry binaryValue="7365745f61726d5f6a6f696e74" sizeInBits="104" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="joint_name">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="position_deg">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+            </EntryList>
+          </CommandContainer>
+          <DefaultSignificance consequenceLevel="normal" />
+          <VerifierSet />
+        </MetaCommand>
+        <MetaCommand name="set_arm_tip" abstract="false" shortDescription="Move the end effector by a relative transform">
+          <LongDescription>Position and orientation are deltas from the current tip pose. base_link applies them along the rover base axes; End-Effector applies them along the tip's local axes. Orientation uses fixed-axis roll/pitch/yaw: Rz(yaw) Ry(pitch) Rx(roll).</LongDescription>
+          <ArgumentList>
+            <Argument name="frame_id" argumentTypeRef="set_arm_tip__frame_id" shortDescription="Axes used for the relative tip transform" />
+            <Argument name="x_m" argumentTypeRef="set_arm_tip__x_m" shortDescription="Relative X translation" />
+            <Argument name="y_m" argumentTypeRef="set_arm_tip__y_m" shortDescription="Relative Y translation" />
+            <Argument name="z_m" argumentTypeRef="set_arm_tip__z_m" shortDescription="Relative Z translation" />
+            <Argument name="roll_deg" argumentTypeRef="set_arm_tip__roll_deg" shortDescription="Relative roll about X" />
+            <Argument name="pitch_deg" argumentTypeRef="set_arm_tip__pitch_deg" shortDescription="Relative pitch about Y" />
+            <Argument name="yaw_deg" argumentTypeRef="set_arm_tip__yaw_deg" shortDescription="Relative yaw about Z" />
+          </ArgumentList>
+          <CommandContainer name="set_arm_tip">
+            <EntryList>
+              <FixedValueEntry binaryValue="7365745f61726d5f746970" sizeInBits="88" name="command_name" shortDescription="Command name identifier">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </FixedValueEntry>
+              <ArgumentRefEntry argumentRef="frame_id">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="x_m">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="y_m">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="z_m">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="roll_deg">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="pitch_deg">
+                <LocationInContainerInBits referenceLocation="previousEntry">
+                  <FixedValue>0</FixedValue>
+                </LocationInContainerInBits>
+              </ArgumentRefEntry>
+              <ArgumentRefEntry argumentRef="yaw_deg">
                 <LocationInContainerInBits referenceLocation="previousEntry">
                   <FixedValue>0</FixedValue>
                 </LocationInContainerInBits>
